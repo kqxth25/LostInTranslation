@@ -33,22 +33,25 @@ public class LanguageCodeConverter {
      * @throws RuntimeException if the resources file can't be loaded properly
      */
     public LanguageCodeConverter(String filename) {
-
         try {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
 
             Iterator<String> iterator = lines.iterator();
-            iterator.next(); // skip the first line
+            iterator.next(); // skip the header line
             while (iterator.hasNext()) {
-                String line = iterator.next();
-                // TODO Task A: use line to populate the instance variables
-                String[] parts = line.split(",");
-                if(parts.length == 2)
-                {
-                    languageCodeToLanguage.put(parts[0].trim(), parts[1].trim());
-                    languageToLanguageCode.put(parts[1].trim(), parts[0].trim());
-                }
+                String line = iterator.next().trim();
+                if (line.isEmpty()) continue; // 跳过空行
+
+                // 文件是 "Language<TAB>Code" 格式
+                String[] parts = line.split("\\t");
+                if (parts.length < 2) continue; // 防御式编程，避免数组越界
+
+                String language = parts[0].trim();
+                String code = parts[1].trim();
+
+                languageCodeToLanguage.put(code, language);
+                languageToLanguageCode.put(language, code);
             }
 
         } catch (IOException | URISyntaxException ex) {
@@ -62,7 +65,6 @@ public class LanguageCodeConverter {
      * @return the name of the language corresponding to the code
      */
     public String fromLanguageCode(String code) {
-        // TODO Task A: update this code to use the correct instance variable to return the appropriate value
         return languageCodeToLanguage.get(code);
     }
 
@@ -72,7 +74,6 @@ public class LanguageCodeConverter {
      * @return the 2-letter code of the language
      */
     public String fromLanguage(String language) {
-        // TODO Task A: update this code to use the correct instance variable to return the appropriate value
         return languageToLanguageCode.get(language);
     }
 
