@@ -38,14 +38,14 @@ public class LanguageCodeConverter {
                     .getClassLoader().getResource(filename).toURI()));
 
             Iterator<String> iterator = lines.iterator();
-            iterator.next(); // skip the header line
+            iterator.next();
             while (iterator.hasNext()) {
                 String line = iterator.next().trim();
-                if (line.isEmpty()) continue; // 跳过空行
+                if (line.isEmpty()) continue;
 
-                // 文件是 "Language<TAB>Code" 格式
+
                 String[] parts = line.split("\\t");
-                if (parts.length < 2) continue; // 防御式编程，避免数组越界
+                if (parts.length < 2) continue;
 
                 String language = parts[0].trim();
                 String code = parts[1].trim();
